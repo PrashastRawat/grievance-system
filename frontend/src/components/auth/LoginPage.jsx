@@ -5,8 +5,8 @@ import { useToast } from "../../context/ToastContext";
 import Spinner from "../shared/Spinner";
 
 const DEMO = [
-  { label: "👤 User",  email: "user@demo.com",  pass: "user123"  },
-  { label: "⚙️ Admin", email: "admin@demo.com", pass: "admin123" },
+  { label: "Citizen", email: "user@demo.com", pass: "user123" },
+  { label: "Admin", email: "admin@demo.com", pass: "admin123" },
 ];
 
 export default function LoginPage() {
@@ -14,8 +14,8 @@ export default function LoginPage() {
   const { showToast } = useToast();
   const navigate = useNavigate();
 
-  const [form, setForm]     = useState({ email: "", password: "" });
-  const [error, setError]   = useState("");
+  const [form, setForm] = useState({ email: "", password: "" });
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async () => {
@@ -24,7 +24,7 @@ export default function LoginPage() {
     setLoading(true);
     try {
       const u = await login(form.email, form.password);
-      showToast(`Welcome back, ${u.name.split(" ")[0]}!`, "🎉");
+      showToast(`Welcome back, ${u.name.split(" ")[0]}!`, "success");
       navigate(u.role === "admin" ? "/admin" : "/dashboard");
     } catch (err) {
       setError(err.response?.data?.message || "Invalid email or password");
@@ -34,92 +34,181 @@ export default function LoginPage() {
   };
 
   return (
-    <div
-      className="min-h-screen flex items-center justify-center p-6"
-      style={{ background: "linear-gradient(135deg, #0D0F1A 0%, #1a2744 60%, #0D0F1A 100%)" }}
-    >
-      {/* Dot grid bg */}
-      <div
-        className="pointer-events-none fixed inset-0 opacity-[.04]"
-        style={{
-          backgroundImage:
-            "radial-gradient(circle at 25% 25%, white 1px, transparent 1px), radial-gradient(circle at 75% 75%, white 1px, transparent 1px)",
-          backgroundSize: "40px 40px",
-        }}
-      />
-
-      <div className="bg-white rounded-2xl p-9 w-full max-w-md shadow-[0_32px_80px_rgba(0,0,0,.35)] relative animate-fadeUp">
-        {/* Logo */}
-        <div className="flex items-center gap-3 mb-7">
-          <div className="w-11 h-11 bg-ink rounded-xl flex items-center justify-center text-xl">🏛️</div>
+    <div style={{
+      minHeight: "100vh",
+      display: "flex",
+      fontFamily: "'Inter', 'Segoe UI', system-ui, sans-serif",
+      background: "#f4f6fb",
+    }}>
+      {/* Left panel */}
+      <div style={{
+        flex: 1,
+        background: "#0f1117",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+        padding: "48px 56px",
+        minWidth: 0,
+      }}>
+        {/* Brand */}
+        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+          <div style={{
+            width: 40, height: 40, borderRadius: 10,
+            background: "#1d9e75",
+            display: "flex", alignItems: "center", justifyContent: "center",
+            fontSize: 20,
+          }}>🏛️</div>
           <div>
-            <div className="font-display font-extrabold text-xl text-ink">GrievanceHub</div>
-            <div className="text-xs text-slate-400">Civic Complaint Portal</div>
+            <div style={{ fontSize: 18, fontWeight: 700, color: "#fff" }}>GrievanceHub</div>
+            <div style={{ fontSize: 12, color: "#6b7280" }}>Civic Complaint Portal</div>
           </div>
         </div>
 
-        <h2 className="font-display font-bold text-2xl text-ink mb-1">Welcome back</h2>
-        <p className="text-sm text-slate-500 mb-6">Sign in to your account to continue</p>
+        {/* Hero text */}
+        <div>
+          <div style={{ fontSize: 38, fontWeight: 800, color: "#fff", lineHeight: 1.25, marginBottom: 16 }}>
+            Report issues.<br />Track progress.<br />Drive change.
+          </div>
+          <div style={{ fontSize: 15, color: "#9ca3af", lineHeight: 1.7, maxWidth: 380 }}>
+            A transparent platform connecting citizens with local authorities for faster resolution of civic issues.
+          </div>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 10, marginTop: 32 }}>
+            {["Ward-based routing", "Real-time tracking", "Verified authorities", "Resolution stats"].map(t => (
+              <div key={t} style={{
+                padding: "7px 14px", borderRadius: 20,
+                background: "#1a1e2a", border: "0.5px solid #2d3244",
+                fontSize: 12, color: "#9ca3af",
+              }}>{t}</div>
+            ))}
+          </div>
+        </div>
+
+        <div style={{ fontSize: 12, color: "#374151" }}>© 2025 GrievanceHub · Dehradun</div>
+      </div>
+
+      {/* Right panel */}
+      <div style={{
+        width: 420,
+        background: "#fff",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        padding: "56px 48px",
+        flexShrink: 0,
+      }}>
+        <div style={{ marginBottom: 32 }}>
+          <div style={{ fontSize: 26, fontWeight: 800, color: "#111827", marginBottom: 6 }}>Welcome back</div>
+          <div style={{ fontSize: 14, color: "#6b7280" }}>Sign in to your account to continue</div>
+        </div>
 
         {error && (
-          <div className="bg-red-50 border border-red-200 text-red-800 rounded-lg px-4 py-3 text-sm mb-4">
-            ⚠️ {error}
+          <div style={{
+            background: "#fef2f2", border: "1px solid #fecaca",
+            color: "#b91c1c", borderRadius: 10, padding: "12px 16px",
+            fontSize: 13, marginBottom: 20,
+          }}>
+            {error}
           </div>
         )}
 
-        <div className="mb-4">
-          <label className="block text-[13px] font-semibold text-ink mb-1.5">Email</label>
+        <div style={{ marginBottom: 18 }}>
+          <label style={{ display: "block", fontSize: 13, fontWeight: 600, color: "#374151", marginBottom: 7 }}>
+            Email address
+          </label>
           <input
-            className="input-field"
             type="email"
             placeholder="you@example.com"
             value={form.email}
             onChange={(e) => setForm({ ...form, email: e.target.value })}
             onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
+            style={{
+              width: "100%", padding: "13px 16px", borderRadius: 10,
+              border: "1.5px solid #e5e7eb", fontSize: 15,
+              fontFamily: "inherit", outline: "none", boxSizing: "border-box",
+              color: "#111827", background: "#f9fafb",
+              transition: "border-color 0.15s",
+            }}
+            onFocus={e => e.target.style.borderColor = "#1d9e75"}
+            onBlur={e => e.target.style.borderColor = "#e5e7eb"}
           />
         </div>
 
-        <div className="mb-5">
-          <label className="block text-[13px] font-semibold text-ink mb-1.5">Password</label>
+        <div style={{ marginBottom: 24 }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 7 }}>
+            <label style={{ fontSize: 13, fontWeight: 600, color: "#374151" }}>Password</label>
+            <span style={{ fontSize: 12, color: "#1d9e75", cursor: "pointer" }}>Forgot password?</span>
+          </div>
           <input
-            className="input-field"
             type="password"
             placeholder="••••••••"
             value={form.password}
             onChange={(e) => setForm({ ...form, password: e.target.value })}
             onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
+            style={{
+              width: "100%", padding: "13px 16px", borderRadius: 10,
+              border: "1.5px solid #e5e7eb", fontSize: 15,
+              fontFamily: "inherit", outline: "none", boxSizing: "border-box",
+              color: "#111827", background: "#f9fafb",
+            }}
+            onFocus={e => e.target.style.borderColor = "#1d9e75"}
+            onBlur={e => e.target.style.borderColor = "#e5e7eb"}
           />
         </div>
 
-        <button className="btn-primary w-full py-3 text-base" onClick={handleSubmit} disabled={loading}>
-          {loading ? <><Spinner /> Signing in…</> : "Sign In →"}
+        <button
+          onClick={handleSubmit}
+          disabled={loading}
+          style={{
+            width: "100%", padding: "14px", borderRadius: 10,
+            background: loading ? "#d1d5db" : "#1d9e75",
+            color: "#fff", fontSize: 15, fontWeight: 700,
+            border: "none", cursor: loading ? "not-allowed" : "pointer",
+            display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+          }}
+        >
+          {loading ? <><Spinner /> Signing in…</> : "Sign in →"}
         </button>
 
         {/* Demo credentials */}
-        <div className="bg-slate-50 border border-slate-200 rounded-lg p-3 mt-5">
-          <div className="text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-2">
-            Demo Credentials
+        <div style={{ marginTop: 28 }}>
+          <div style={{
+            display: "flex", alignItems: "center", gap: 10, marginBottom: 14,
+          }}>
+            <div style={{ flex: 1, height: 1, background: "#e5e7eb" }} />
+            <span style={{ fontSize: 11, color: "#9ca3af", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.08em" }}>
+              Demo accounts
+            </span>
+            <div style={{ flex: 1, height: 1, background: "#e5e7eb" }} />
           </div>
           {DEMO.map(({ label, email, pass }) => (
-            <div key={email} className="flex items-center gap-2 mb-1.5">
-              <span className="text-[11px] text-slate-500">{label}:</span>
-              <button
-                className="text-[11px] text-blue-500 font-semibold underline cursor-pointer bg-transparent border-none"
-                onClick={() => setForm({ email, password: pass })}
-              >
-                {email} / {pass}
-              </button>
-            </div>
+            <button
+              key={email}
+              onClick={() => setForm({ email, password: pass })}
+              style={{
+                width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between",
+                padding: "10px 14px", borderRadius: 10, marginBottom: 8,
+                background: "#f9fafb", border: "1px solid #e5e7eb",
+                cursor: "pointer", textAlign: "left",
+              }}
+            >
+              <div>
+                <div style={{ fontSize: 12, fontWeight: 600, color: "#374151" }}>{label}</div>
+                <div style={{ fontSize: 11, color: "#9ca3af", fontFamily: "monospace", marginTop: 2 }}>
+                  {email} · {pass}
+                </div>
+              </div>
+              <span style={{ fontSize: 12, color: "#1d9e75" }}>Use →</span>
+            </button>
           ))}
         </div>
 
-        <p className="text-center text-sm text-slate-500 mt-5">
-          Don't have an account?{" "}
+        <p style={{ textAlign: "center", fontSize: 13, color: "#6b7280", marginTop: 20, marginBottom: 0 }}>
+          No account?{" "}
           <span
-            className="text-ink font-semibold cursor-pointer underline"
             onClick={() => navigate("/register")}
+            style={{ color: "#1d9e75", fontWeight: 700, cursor: "pointer" }}
           >
-            Register
+            Register here
           </span>
         </p>
       </div>
