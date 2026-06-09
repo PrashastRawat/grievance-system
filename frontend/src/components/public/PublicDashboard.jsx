@@ -17,7 +17,6 @@ const CAT_ICON = {
   Road: "🛣️", Water: "💧", Electricity: "⚡", Sanitation: "🗑️", Other: "📋",
 };
 
-// ── Mini bar ──────────────────────────────────────────────────────────────────
 function MiniBar({ value, max, color = "#1a56db", label, sub }) {
   const pct = max > 0 ? (value / max) * 100 : 0;
   return (
@@ -33,7 +32,6 @@ function MiniBar({ value, max, color = "#1a56db", label, sub }) {
   );
 }
 
-// ── Stat card ─────────────────────────────────────────────────────────────────
 function StatCard({ icon, label, value, sub, accent = "#1a56db" }) {
   return (
     <div style={{ background: "#fff", border: "1px solid #e5e7eb", borderRadius: 16, padding: "24px 28px", display: "flex", alignItems: "flex-start", gap: 16, boxShadow: "0 1px 4px rgba(0,0,0,0.06)" }}>
@@ -49,7 +47,6 @@ function StatCard({ icon, label, value, sub, accent = "#1a56db" }) {
   );
 }
 
-// ── Section card ──────────────────────────────────────────────────────────────
 function SectionCard({ title, icon, children, badge }) {
   return (
     <div style={{ background: "#fff", border: "1px solid #e5e7eb", borderRadius: 16, overflow: "hidden", boxShadow: "0 1px 4px rgba(0,0,0,0.06)" }}>
@@ -63,7 +60,6 @@ function SectionCard({ title, icon, children, badge }) {
   );
 }
 
-// ── Donut chart ───────────────────────────────────────────────────────────────
 function DonutChart({ data }) {
   if (!data?.length) return <p style={{ color: "#9ca3af", fontSize: 13 }}>No data yet.</p>;
   const total = data.reduce((s, d) => s + d.count, 0);
@@ -105,7 +101,6 @@ function DonutChart({ data }) {
   );
 }
 
-// ── Sparkline ─────────────────────────────────────────────────────────────────
 function Sparkline({ data }) {
   if (!data?.length) return <p style={{ color: "#9ca3af", fontSize: 13 }}>No trend data yet.</p>;
   const W = 520, H = 120, PAD = 16;
@@ -142,62 +137,32 @@ function Sparkline({ data }) {
   );
 }
 
-// ── Ward Health Score Card ────────────────────────────────────────────────────
 function WardHealthCard({ ward }) {
   const [expanded, setExpanded] = useState(false);
   const { score, grade, color, emoji, breakdown } = ward;
-
-  // Score ring
   const R = 28, C = 2 * Math.PI * R;
   const dash = (score / 100) * C;
-
   return (
-    <div
-      style={{
-        background: "#fff",
-        border: `1.5px solid ${color}33`,
-        borderRadius: 14,
-        padding: "16px 18px",
-        cursor: "pointer",
-        transition: "box-shadow 0.2s",
-        boxShadow: expanded ? `0 4px 16px ${color}22` : "0 1px 4px rgba(0,0,0,0.06)",
-      }}
-      onClick={() => setExpanded(e => !e)}
-    >
-      {/* Top row */}
+    <div style={{ background: "#fff", border: `1.5px solid ${color}33`, borderRadius: 14, padding: "16px 18px", cursor: "pointer", transition: "box-shadow 0.2s", boxShadow: expanded ? `0 4px 16px ${color}22` : "0 1px 4px rgba(0,0,0,0.06)" }} onClick={() => setExpanded(e => !e)}>
       <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-        {/* Score ring */}
         <svg width={68} height={68} viewBox="0 0 68 68" style={{ flexShrink: 0 }}>
           <circle cx={34} cy={34} r={R} fill="none" stroke="#f3f4f6" strokeWidth={8} />
-          <circle cx={34} cy={34} r={R} fill="none" stroke={color} strokeWidth={8}
-            strokeDasharray={`${dash} ${C}`} strokeLinecap="round"
-            transform="rotate(-90 34 34)" style={{ transition: "stroke-dasharray 1s ease" }} />
+          <circle cx={34} cy={34} r={R} fill="none" stroke={color} strokeWidth={8} strokeDasharray={`${dash} ${C}`} strokeLinecap="round" transform="rotate(-90 34 34)" style={{ transition: "stroke-dasharray 1s ease" }} />
           <text x={34} y={30} textAnchor="middle" fontSize={14} fontWeight={800} fill={color}>{score}</text>
           <text x={34} y={43} textAnchor="middle" fontSize={8}  fill="#9ca3af">/ 100</text>
         </svg>
-
         <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{ fontSize: 14, fontWeight: 700, color: "#111827", marginBottom: 3, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-            {ward.ward}
-          </div>
+          <div style={{ fontSize: 14, fontWeight: 700, color: "#111827", marginBottom: 3, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{ward.ward}</div>
           <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-            <span style={{ fontSize: 11, fontWeight: 700, padding: "2px 8px", borderRadius: 99, background: color + "20", color }}>
-              {emoji} {grade}
-            </span>
+            <span style={{ fontSize: 11, fontWeight: 700, padding: "2px 8px", borderRadius: 99, background: color + "20", color }}>{emoji} {grade}</span>
           </div>
-          <div style={{ fontSize: 11, color: "#9ca3af", marginTop: 4 }}>
-            {breakdown.resolutionRate}% resolved · {ward.total} total
-          </div>
+          <div style={{ fontSize: 11, color: "#9ca3af", marginTop: 4 }}>{breakdown.resolutionRate}% resolved · {ward.total} total</div>
         </div>
         <span style={{ fontSize: 12, color: "#9ca3af", flexShrink: 0 }}>{expanded ? "▲" : "▼"}</span>
       </div>
-
-      {/* Expanded breakdown */}
       {expanded && (
         <div style={{ marginTop: 14, paddingTop: 14, borderTop: "1px solid #f3f4f6" }}>
-          <div style={{ fontSize: 11, fontWeight: 700, color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: 10 }}>
-            Score Breakdown
-          </div>
+          <div style={{ fontSize: 11, fontWeight: 700, color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: 10 }}>Score Breakdown</div>
           {[
             { label: "Resolution Rate",  score: breakdown.resolutionScore, weight: "40%", detail: `${breakdown.resolutionRate}% resolved` },
             { label: "Speed",            score: breakdown.speedScore,      weight: "25%", detail: breakdown.avgDays ? `~${breakdown.avgDays} days avg` : "No data" },
@@ -206,19 +171,11 @@ function WardHealthCard({ ward }) {
           ].map(f => (
             <div key={f.label} style={{ marginBottom: 10 }}>
               <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 3 }}>
-                <span style={{ fontSize: 12, color: "#374151", fontWeight: 600 }}>
-                  {f.label}
-                  <span style={{ fontWeight: 400, color: "#9ca3af", marginLeft: 4 }}>({f.weight})</span>
-                </span>
+                <span style={{ fontSize: 12, color: "#374151", fontWeight: 600 }}>{f.label}<span style={{ fontWeight: 400, color: "#9ca3af", marginLeft: 4 }}>({f.weight})</span></span>
                 <span style={{ fontSize: 12, color: "#111827", fontWeight: 700 }}>{f.score}/100</span>
               </div>
               <div style={{ height: 5, background: "#f3f4f6", borderRadius: 99, marginBottom: 2 }}>
-                <div style={{
-                  height: "100%", borderRadius: 99,
-                  width: `${f.score}%`,
-                  background: f.score >= 80 ? "#22c55e" : f.score >= 60 ? "#f59e0b" : f.score >= 40 ? "#f97316" : "#ef4444",
-                  transition: "width 0.8s ease",
-                }} />
+                <div style={{ height: "100%", borderRadius: 99, width: `${f.score}%`, background: f.score >= 80 ? "#22c55e" : f.score >= 60 ? "#f59e0b" : f.score >= 40 ? "#f97316" : "#ef4444", transition: "width 0.8s ease" }} />
               </div>
               <div style={{ fontSize: 11, color: "#9ca3af" }}>{f.detail}</div>
             </div>
@@ -229,7 +186,6 @@ function WardHealthCard({ ward }) {
   );
 }
 
-// ── Ward Health Legend ────────────────────────────────────────────────────────
 function HealthLegend() {
   const grades = [
     { emoji: "🟢", label: "Healthy",         range: "80–100", color: "#22c55e" },
@@ -250,7 +206,6 @@ function HealthLegend() {
   );
 }
 
-// ── Main component ─────────────────────────────────────────────────────────────
 export default function PublicDashboard() {
   const [stats,       setStats]       = useState(null);
   const [byCat,       setByCat]       = useState([]);
@@ -324,119 +279,85 @@ export default function PublicDashboard() {
 
   const maxCat  = Math.max(...byCat.map(c => c.total), 1);
   const maxWard = Math.max(...byWard.map(w => w.total), 1);
-
-  // Summary counts for health badge
   const healthyCnt  = wardHealth.filter(w => w.score >= 80).length;
   const criticalCnt = wardHealth.filter(w => w.score < 40).length;
 
   return (
-    <div style={{ minHeight: "100vh", background: "#f4f6f9", fontFamily: "'Segoe UI', system-ui, sans-serif" }}>
+    <div style={{ minHeight: "100vh", background: "#66a3e97c", fontFamily: "'Segoe UI', system-ui, sans-serif" }}>
       <style>{`@keyframes spin { to { transform: rotate(360deg); } } @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }`}</style>
 
       {/* Header */}
-      <div style={{ background: "linear-gradient(135deg, #1a56db 0%, #0e9f6e 100%)", color: "#fff", padding: "40px 32px 32px" }}>
-        <div style={{ maxWidth: 1200, margin: "0 auto" }}>
+      <div style={{ background: "linear-gradient(135deg, #1b1b1b 0%, #0e0653 100%)", color: "#ffffff", padding: "60px 40px 40px", maxWidth: "100%" }}>
+        <div style={{ maxWidth: 1400, margin: "0 auto" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 12 }}>
             <div>
-              <h1 style={{ margin: 0, fontSize: 28, fontWeight: 800, letterSpacing: "-0.5px" }}>
-                🏛️ GrievanceHub — Public Dashboard
-              </h1>
-              <p style={{ margin: "6px 0 0", opacity: 0.85, fontSize: 14 }}>
-                Live transparency data for Dehradun Municipal Grievances
-              </p>
+              <h1 style={{ margin: 0, fontSize: 40, fontWeight: 900, letterSpacing: "-0.5px" }}>🏛️ GrievanceHub</h1>
+              <p style={{ margin: "8px 0 0", opacity: 0.85, fontSize: 16 }}>Live transparency data for Dehradun</p>
             </div>
             <div style={{ textAlign: "right", fontSize: 12, opacity: 0.75 }}>
               <div>🔄 Auto-refreshes every minute</div>
               {lastUpdated && <div>Last updated: {lastUpdated.toLocaleTimeString("en-IN")}</div>}
-              <div style={{ marginTop: 6 }}>
-                <a href="/login" style={{ color: "#fff", textDecoration: "none", background: "rgba(255,255,255,0.2)", padding: "4px 12px", borderRadius: 6, fontSize: 12, fontWeight: 600 }}>
-                  Login →
-                </a>
+              <div style={{ marginTop: 10 }}>
+                <a href="/login" style={{ color: "#fff", textDecoration: "none", background: "rgba(13, 209, 39, 0.95)", padding: "6px 16px", borderRadius: 8, fontSize: 13, fontWeight: 600, display: "inline-block" }}>Login →</a>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      <div style={{ maxWidth: 1200, margin: "0 auto", padding: "32px 24px" }}>
+      <div style={{ maxWidth: 1400, margin: "0 auto", padding: "40px 40px" }}>
 
         {/* KPIs */}
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 16, marginBottom: 28 }}>
-          <StatCard icon="📋" label="Total Complaints"  value={stats?.total}      accent="#1a56db" />
-          <StatCard icon="✅" label="Resolved"           value={stats?.resolved}   sub={`${stats?.resolutionRate}% resolution rate`} accent="#10b981" />
-          <StatCard icon="⚙️" label="In Progress"        value={stats?.inProgress} accent="#8b5cf6" />
-          <StatCard icon="⏳" label="Pending"            value={stats?.pending}    accent="#f59e0b" />
-          <StatCard icon="📅" label="Avg. Resolution"    value={stats?.avgResolutionDays ? `${stats.avgResolutionDays}d` : "—"} sub="average days to resolve" accent="#0ea5e9" />
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 20, marginBottom: 40 }}>
+          <StatCard  icon="📋" label="Total Complaints"  value={stats?.total}      accent="#1a56db" />
+          <StatCard  icon="✅" label="Resolved"           value={stats?.resolved}   sub={`${stats?.resolutionRate}% resolution rate`} accent="#10b981" />
+          <StatCard  icon="⚙️" label="In Progress"        value={stats?.inProgress} accent="#8b5cf6" />
+          <StatCard  icon="⏳" label="Pending"            value={stats?.pending}    accent="#f59e0b" />
+          <StatCard  icon="📅" label="Avg. Resolution"    value={stats?.avgResolutionDays ? `${stats.avgResolutionDays}d` : "—"} sub="average days" accent="#0ea5e9" />
         </div>
 
         {/* Status donut + trend */}
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 2fr", gap: 20, marginBottom: 20 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1.5fr", gap: 20, marginBottom: 40, alignItems: "start" }}>
           <SectionCard title="Status Breakdown" icon="🍩">
             <DonutChart data={byStatus} />
           </SectionCard>
-          <SectionCard title="Complaints Submitted — Last 30 Days" icon="📈">
+          <SectionCard title="30-Day Trend" icon="📈">
             <Sparkline data={trend} />
           </SectionCard>
         </div>
 
-        {/* ── Ward Health Score ── */}
-        <div style={{ marginBottom: 20 }}>
-          <SectionCard
-            title="Ward Health Scores"
-            icon="🏥"
-            badge={
-              wardHealth.length > 0 && (
-                <div style={{ display: "flex", gap: 8, marginLeft: "auto" }}>
-                  {healthyCnt > 0 && (
-                    <span style={{ fontSize: 11, fontWeight: 700, padding: "2px 8px", borderRadius: 99, background: "#dcfce7", color: "#166534" }}>
-                      🟢 {healthyCnt} Healthy
-                    </span>
-                  )}
-                  {criticalCnt > 0 && (
-                    <span style={{ fontSize: 11, fontWeight: 700, padding: "2px 8px", borderRadius: 99, background: "#fee2e2", color: "#991b1b" }}>
-                      🔴 {criticalCnt} Critical
-                    </span>
-                  )}
-                </div>
-              )
-            }
-          >
+        {/* Ward Health */}
+        <div style={{ marginBottom: 40 }}>
+          <SectionCard title="Ward Health Scores" icon="🏥" badge={healthyCnt > 0 || criticalCnt > 0 ? (
+            <div style={{ display: "flex", gap: 8, marginLeft: "auto" }}>
+              {healthyCnt > 0 && <span style={{ fontSize: 11, fontWeight: 700, padding: "2px 8px", borderRadius: 99, background: "#dcfce7", color: "#166534" }}>🟢 {healthyCnt}</span>}
+              {criticalCnt > 0 && <span style={{ fontSize: 11, fontWeight: 700, padding: "2px 8px", borderRadius: 99, background: "#fee2e2", color: "#991b1b" }}>🔴 {criticalCnt}</span>}
+            </div>
+          ) : null}>
             {healthLoading ? (
               <div style={{ display: "flex", alignItems: "center", gap: 10, color: "#9ca3af", fontSize: 13 }}>
                 <div style={{ width: 16, height: 16, border: "2px solid #e5e7eb", borderTop: "2px solid #1a56db", borderRadius: "50%", animation: "spin 0.8s linear infinite" }} />
-                Calculating ward health scores…
+                Calculating scores…
               </div>
             ) : wardHealth.length === 0 ? (
-              <p style={{ color: "#9ca3af", fontSize: 13 }}>Not enough data yet. Submit some complaints first.</p>
+              <p style={{ color: "#9ca3af", fontSize: 13 }}>Not enough data yet.</p>
             ) : (
               <>
-                {/* Legend */}
                 <div style={{ marginBottom: 16 }}>
                   <HealthLegend />
                 </div>
-
-                {/* AI badge */}
-                <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 16, fontSize: 12, color: "#7c3aed" }}>
-                  <span style={{ fontSize: 14 }}>🤖</span>
-                  <span>Scores calculated by AI using resolution rate, speed, pending load, and dispute rate</span>
-                  <span style={{ padding: "1px 7px", borderRadius: 99, background: "#ede9fe", fontWeight: 700 }}>AI Powered</span>
-                </div>
-
-                {/* Cards grid */}
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: 12 }}>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: 12, marginBottom: 16 }}>
                   {wardHealth.map((w, i) => (
                     <WardHealthCard key={i} ward={w} />
                   ))}
                 </div>
-
-                {/* City average */}
                 {wardHealth.length > 1 && (() => {
                   const avg = Math.round(wardHealth.reduce((s, w) => s + w.score, 0) / wardHealth.length);
                   const avgColor = avg >= 80 ? "#22c55e" : avg >= 60 ? "#f59e0b" : avg >= 40 ? "#f97316" : "#ef4444";
                   return (
-                    <div style={{ marginTop: 16, padding: "12px 18px", background: "#f9fafb", borderRadius: 10, border: "1px solid #e5e7eb", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                      <span style={{ fontSize: 13, fontWeight: 600, color: "#374151" }}>🏙️ City Average Health Score</span>
-                      <span style={{ fontSize: 20, fontWeight: 800, color: avgColor }}>{avg} / 100</span>
+                    <div style={{ padding: "16px 20px", background: "#f9fafb", borderRadius: 10, border: "1px solid #e5e7eb", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                      <span style={{ fontSize: 14, fontWeight: 600, color: "#374151" }}>🏙️ City Average</span>
+                      <span style={{ fontSize: 24, fontWeight: 900, color: avgColor }}>{avg}/100</span>
                     </div>
                   );
                 })()}
@@ -446,40 +367,35 @@ export default function PublicDashboard() {
         </div>
 
         {/* By category + by ward */}
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20, marginBottom: 20 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20, marginBottom: 40 }}>
           <SectionCard title="By Category" icon="🗂️">
             {byCat.length === 0 ? (
               <p style={{ color: "#9ca3af", fontSize: 13 }}>No data yet.</p>
             ) : byCat.map(c => (
-              <MiniBar key={c._id} label={`${CAT_ICON[c._id] || "📋"} ${c._id}`} value={c.total} max={maxCat} color="#1a56db" sub={`${c.total} (${c.resolved} resolved)`} />
+              <MiniBar key={c._id} label={`${CAT_ICON[c._id] || "📋"} ${c._id}`} value={c.total} max={maxCat} color="#1a56db" sub={`${c.resolved} resolved`} />
             ))}
           </SectionCard>
-          <SectionCard title="Top Wards by Volume" icon="📍">
+          <SectionCard title="Top Wards" icon="📍">
             {byWard.length === 0 ? (
               <p style={{ color: "#9ca3af", fontSize: 13 }}>No data yet.</p>
             ) : byWard.map(w => (
-              <MiniBar key={w._id} label={w._id || "Unknown"} value={w.total} max={maxWard} color="#8b5cf6" sub={`${w.total} complaints`} />
+              <MiniBar key={w._id} label={w._id || "Unknown"} value={w.total} max={maxWard} color="#8b5cf6" sub={`${w.resolved} resolved`} />
             ))}
           </SectionCard>
         </div>
 
         {/* Authority leaderboard */}
         {topAuth.length > 0 && (
-          <div style={{ marginBottom: 20 }}>
-            <SectionCard title="Authority Performance Leaderboard" icon="🏆">
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: 12 }}>
+          <div style={{ marginBottom: 40 }}>
+            <SectionCard title="Authority Leaderboard" icon="🏆">
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: 14 }}>
                 {topAuth.map((a, i) => (
-                  <div key={i} style={{ background: "#f9fafb", border: "1px solid #e5e7eb", borderRadius: 10, padding: "12px 16px" }}>
-                    <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8 }}>
-                      <span style={{ fontSize: 13, fontWeight: 600, color: "#111827" }}>{a.ward}</span>
-                      <span style={{ fontSize: 11, fontWeight: 700, background: a.rate >= 70 ? "#bbf7d0" : a.rate >= 40 ? "#fef3c7" : "#fee2e2", color: a.rate >= 70 ? "#14532d" : a.rate >= 40 ? "#92400e" : "#991b1b", padding: "2px 8px", borderRadius: 99 }}>
-                        {a.rate}%
-                      </span>
-                    </div>
-                    <div style={{ fontSize: 12, color: "#6b7280", marginBottom: 8 }}>{a.department} · {a.resolved}/{a.total} resolved</div>
-                    <div style={{ height: 6, background: "#e5e7eb", borderRadius: 99 }}>
-                      <div style={{ height: "100%", width: `${a.rate}%`, background: a.rate >= 70 ? "#22c55e" : a.rate >= 40 ? "#f59e0b" : "#ef4444", borderRadius: 99, transition: "width 0.8s ease" }} />
-                    </div>
+                  <div key={i} style={{ background: "#f9fafb", border: "1px solid #e5e7eb", borderRadius: 10, padding: "16px 14px", textAlign: "center" }}>
+                    <div style={{ fontSize: 22, marginBottom: 8 }}>{i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : "⭐"}</div>
+                    <div style={{ fontSize: 13, fontWeight: 600, color: "#111827", marginBottom: 2 }}>{a.ward}</div>
+                    <div style={{ fontSize: 12, color: "#6b7280", marginBottom: 10 }}>{a.department}</div>
+                    <div style={{ fontSize: 20, fontWeight: 900, color: a.rate >= 70 ? "#22c55e" : a.rate >= 40 ? "#f59e0b" : "#ef4444", marginBottom: 6 }}>{a.rate}%</div>
+                    <div style={{ fontSize: 11, color: "#6b7280" }}>{a.resolved}/{a.total}</div>
                   </div>
                 ))}
               </div>
@@ -489,24 +405,24 @@ export default function PublicDashboard() {
 
         {/* Recently resolved */}
         {recent.length > 0 && (
-          <SectionCard title="Recently Resolved Complaints" icon="🕐">
+          <SectionCard title="Recently Resolved" icon="🕐">
             <div style={{ overflowX: "auto" }}>
               <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
                 <thead>
                   <tr style={{ borderBottom: "2px solid #e5e7eb" }}>
-                    {["Title", "Category", "Ward", "Resolved At"].map(h => (
-                      <th key={h} style={{ padding: "8px 12px", textAlign: "left", fontWeight: 700, color: "#6b7280", fontSize: 12, textTransform: "uppercase", letterSpacing: "0.5px" }}>{h}</th>
+                    {["Title", "Category", "Ward", "Resolved"].map(h => (
+                      <th key={h} style={{ padding: "12px 16px", textAlign: "left", fontWeight: 700, color: "#6b7280", fontSize: 12, textTransform: "uppercase" }}>{h}</th>
                     ))}
                   </tr>
                 </thead>
                 <tbody>
                   {recent.map(c => (
                     <tr key={c._id} style={{ borderBottom: "1px solid #f3f4f6" }}>
-                      <td style={{ padding: "10px 12px", color: "#111827", fontWeight: 500 }}>{c.title}</td>
-                      <td style={{ padding: "10px 12px", color: "#374151" }}>{CAT_ICON[c.category] || "📋"} {c.category}</td>
-                      <td style={{ padding: "10px 12px", color: "#374151" }}>{c.ward}</td>
-                      <td style={{ padding: "10px 12px", color: "#6b7280" }}>
-                        {new Date(c.updatedAt).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}
+                      <td style={{ padding: "12px 16px", color: "#111827", fontWeight: 500 }}>{c.title}</td>
+                      <td style={{ padding: "12px 16px", color: "#374151" }}>{CAT_ICON[c.category]} {c.category}</td>
+                      <td style={{ padding: "12px 16px", color: "#374151" }}>{c.ward}</td>
+                      <td style={{ padding: "12px 16px", color: "#6b7280", fontSize: 12 }}>
+                        {new Date(c.updatedAt).toLocaleDateString("en-IN", { day: "numeric", month: "short" })}
                       </td>
                     </tr>
                   ))}
@@ -515,12 +431,11 @@ export default function PublicDashboard() {
             </div>
           </SectionCard>
         )}
+      </div>
 
-        {/* Footer */}
-        <div style={{ textAlign: "center", marginTop: 32, color: "#9ca3af", fontSize: 12 }}>
-          GrievanceHub · Dehradun Municipal Grievance System ·{" "}
-          <a href="/login" style={{ color: "#1a56db" }}>Submit a Complaint</a>
-        </div>
+      {/* Footer */}
+      <div style={{ background: "#111827", color: "#fff", padding: "40px", textAlign: "center", fontSize: 13, marginTop: 40 }}>
+        GrievanceHub · Dehradun Municipal Grievance System
       </div>
     </div>
   );
